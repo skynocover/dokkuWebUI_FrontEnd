@@ -4,16 +4,22 @@ import { ColumnsType } from 'antd/lib/table';
 import * as antd from 'antd';
 import * as cookie from 'js-cookie';
 
-import { PrimaryButton } from '../components/PrimaryButton';
 import { AppContext } from '../AppContext';
+import { PrimaryButton } from '../components/PrimaryButton';
 import { Notification } from '../components/Notification';
-import { ReportTable } from '../components/ReportTable';
-import { ProxyTable } from '../components/ProxyTable';
 import { DangerButton } from '../components/DangerButton';
 import { AddApp } from '../modals/AddApp';
 
 const GlobalPage = () => {
   const appCtx = React.useContext(AppContext);
+
+  const initialize = async () => {
+    await appCtx.getApps();
+  };
+
+  React.useEffect(() => {
+    initialize();
+  }, []);
 
   const operations = (
     <antd.Button
@@ -28,12 +34,12 @@ const GlobalPage = () => {
 
   return (
     <>
-      <antd.Tabs defaultActiveKey="domain" tabBarExtraContent={operations}>
-        <antd.Tabs.TabPane tab="Domain" key="domain">
+      <antd.Tabs defaultActiveKey="upload" tabBarExtraContent={operations}>
+        <antd.Tabs.TabPane tab="Global Domain" key="domain">
           <DomainTable />
         </antd.Tabs.TabPane>
 
-        <antd.Tabs.TabPane tab="Config" key="config">
+        <antd.Tabs.TabPane tab="Global Config" key="config">
           <ConfigTable />
         </antd.Tabs.TabPane>
       </antd.Tabs>
@@ -50,7 +56,6 @@ const ConfigTable = () => {
     const data = await appCtx.fetch('get', `/api/globalconfig`);
     if (data) {
       const reports = data.report;
-
       const temp: PropsValue[] = [];
       for (const report of reports) {
         temp.push({
@@ -63,7 +68,6 @@ const ConfigTable = () => {
   };
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 
@@ -210,7 +214,6 @@ const DomainTable = () => {
   };
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 

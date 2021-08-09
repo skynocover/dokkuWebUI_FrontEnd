@@ -32,6 +32,11 @@ interface AppContextProps {
   getApps: () => Promise<void>;
   menus: any[];
   setMenus: React.Dispatch<React.SetStateAction<any[]>>;
+
+  sshKeyUploaded: boolean;
+  setSshKeyUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+
+  initialized: boolean;
 }
 
 const AppContext = React.createContext<AppContextProps>(undefined!);
@@ -52,8 +57,10 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [modal, setModal] = React.useState<any>(null);
 
   const [account, setAccount] = React.useState('');
-  const [menus, setMenus] = React.useState<any[]>([]);
+  const [menus, setMenus] = React.useState<any[]>([globalMenu]);
   const [globalDomain, setGlobalDomain] = React.useState('');
+  const [sshKeyUploaded, setSshKeyUploaded] = React.useState<boolean>(false);
+  const [initialized, setInitialized] = React.useState<boolean>(false);
   /////////////////////////////////////////////////////
 
   React.useEffect(() => {
@@ -77,7 +84,11 @@ const AppProvider = ({ children }: AppProviderProps) => {
       });
       console.log('response', response.data);
 
-      if (response.data.errorCode === 999999) {
+      if (response.data.errorCode !== 3) {
+        setSshKeyUploaded(true);
+      }
+
+      if (response.data.errorCode === 2) {
         window.location.href = loginPage;
         return null;
       }
@@ -120,10 +131,11 @@ const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const redirect = async () => {
-    let data = await fetch('get', '/api/redirect');
-    if (!data) {
-      window.location.href = loginPage;
+    const data = await fetch('get', `/api/redirect`);
+    if (data) {
+      window.location.href = homePage;
     }
+    setInitialized(true);
   };
 
   const getApps = async () => {
@@ -165,6 +177,10 @@ const AppProvider = ({ children }: AppProviderProps) => {
         getApps,
         menus,
         setMenus,
+
+        sshKeyUploaded,
+        setSshKeyUploaded,
+        initialized,
       }}
     >
       {modal && (

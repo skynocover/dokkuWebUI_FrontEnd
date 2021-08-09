@@ -5,12 +5,12 @@ import * as antd from 'antd';
 import * as cookie from 'js-cookie';
 
 import { AppContext } from '../AppContext';
-import { ReportTable } from '../components/ReportTable';
-import { ProxyTable } from '../components/ProxyTable';
-import { DomainTable } from '../components/DomainTable';
-import { GitTable } from '../components/GitTable';
-import { ConfigTable } from '../components/ConfigTable';
-import { Log } from '../components/Log';
+import { ReportTable } from '../table/ReportTable';
+import { ProxyTable } from '../table/ProxyTable';
+import { DomainTable } from '../table/DomainTable';
+import { GitTable } from '../table/GitTable';
+import { ConfigTable } from '../table/ConfigTable';
+import { Log } from '../table/Log';
 
 interface AppPageProp {
   appName: string;
@@ -22,7 +22,6 @@ const AppPage = ({ appName }: AppPageProp) => {
   const initialize = async () => {};
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 

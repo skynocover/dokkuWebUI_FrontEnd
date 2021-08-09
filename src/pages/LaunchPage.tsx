@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContext } from '../AppContext';
 import * as antd from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+
+import { AppContext } from '../AppContext';
+import { Notification } from '../components/Notification';
 
 const LaunchPage = () => {
   const appCtx = React.useContext(AppContext);
 
   React.useEffect(() => {
     const init = async () => {
-      const data = await appCtx.fetch('get', '/account/redirect');
-      window.location.href = data ? appCtx.homePage : appCtx.loginPage;
+      await appCtx.redirect();
     };
 
     init();
@@ -23,6 +25,7 @@ const LoginPage = () => {
   const LoginForm = () => {
     return (
       <antd.Form
+        initialValues={{ account: 'admin', password: '1qaz#EDC5tgb' }}
         onFinish={(values) => appCtx.login(values.account, values.password)}
       >
         <antd.Form.Item
@@ -79,7 +82,51 @@ const LoginPage = () => {
 };
 
 const NotFoundPage = () => {
-  return <></>;
+  return <>404</>;
 };
 
-export { LaunchPage, LoginPage, NotFoundPage };
+const UploadPage = () => {
+  const appCtx = React.useContext(AppContext);
+
+  const props = {
+    name: 'uploadfile',
+    action: '/api/ssh/upload',
+
+    async onChange(info: any) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        Notification.add('success', 'success upload!');
+        appCtx.setSshKeyUploaded(true);
+        window.location.href = appCtx.loginPage;
+      } else if (info.file.status === 'error') {
+        Notification.add('success', 'upload fail!');
+      }
+    },
+  };
+  return (
+    <div className="d-flex align-items-center vh-100">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div
+            className="col-4 m-4 text-center font-weight-bold"
+            style={{ fontSize: '20px' }}
+          >
+            Please Upload SSH Key First
+          </div>
+        </div>
+
+        <div className="m-5" />
+
+        <div className="row justify-content-center">
+          <antd.Upload {...props}>
+            <antd.Button icon={<UploadOutlined />}>Click to Upload</antd.Button>
+          </antd.Upload>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { LaunchPage, LoginPage, NotFoundPage, UploadPage };

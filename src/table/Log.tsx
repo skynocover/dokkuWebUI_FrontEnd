@@ -29,7 +29,6 @@ const Log = ({ appName }: AppPageProp) => {
   };
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 

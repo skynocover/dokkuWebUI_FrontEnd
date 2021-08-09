@@ -23,15 +23,17 @@ const ReportTable = ({ appName }: AppPageProp) => {
 
   const initialize = async () => {
     const data = await appCtx.fetch('get', `/api/app/${appName}`);
-    const reports = data.report;
+    if (data) {
+      const reports = data.report;
 
-    for (const report of reports) {
-      if (report.Key === 'App locked') {
-        setLock(report.Value === 'true');
-      } else if (report.Key === 'App dir') {
-        setAppDir(report.Value);
-      } else if (report.Key === 'App deploy source') {
-        setDeploySource(report.Value);
+      for (const report of reports) {
+        if (report.Key === 'App locked') {
+          setLock(report.Value === 'true');
+        } else if (report.Key === 'App dir') {
+          setAppDir(report.Value);
+        } else if (report.Key === 'App deploy source') {
+          setDeploySource(report.Value);
+        }
       }
     }
   };

@@ -4,24 +4,29 @@ import './App.css';
 import { AppContext } from './AppContext';
 import * as ReactRouterDOM from 'react-router-dom';
 import { MainPage } from './pages/MainPage';
-import { LaunchPage, LoginPage, NotFoundPage } from './pages/LaunchPage';
-import { AppPage } from './pages/AppPage';
-import { GlobalPage } from './pages/GlobalPage';
-import * as cookie from 'js-cookie';
+import {
+  LaunchPage,
+  LoginPage,
+  NotFoundPage,
+  UploadPage,
+} from './pages/LaunchPage';
 
 const App = () => {
   const appCtx = React.useContext(AppContext);
 
   const initialize = async () => {
-    await appCtx.getApps();
+    await appCtx.redirect();
   };
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 
-  return (
+  if (!appCtx.initialized) {
+    return <div></div>;
+  }
+
+  return appCtx.sshKeyUploaded ? (
     <ReactRouterDOM.HashRouter>
       <ReactRouterDOM.Switch>
         <ReactRouterDOM.Route path="/" exact component={LaunchPage} />
@@ -41,6 +46,8 @@ const App = () => {
         <ReactRouterDOM.Route path="*" component={NotFoundPage} />
       </ReactRouterDOM.Switch>
     </ReactRouterDOM.HashRouter>
+  ) : (
+    <UploadPage />
   );
 };
 

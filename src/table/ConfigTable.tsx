@@ -32,7 +32,6 @@ const ConfigTable = ({ appName }: AppPageProp) => {
   };
 
   React.useEffect(() => {
-    let user = JSON.parse(cookie.get('user') || '{}');
     initialize();
   }, []);
 
@@ -51,6 +50,10 @@ const ConfigTable = ({ appName }: AppPageProp) => {
       title: 'Value',
       align: 'center',
       dataIndex: 'value',
+      width: 800,
+      render: (item) => (
+        <div style={{ wordWrap: 'break-word', width: 800 }}>{item}</div>
+      ),
     },
     {
       title: 'Delete',
