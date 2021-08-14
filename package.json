@@ -51,5 +51,5 @@
     "@types/js-cookie": "^2.2.6",
     "@types/react-router-dom": "^5.1.7"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8081"
 }

@@ -11,7 +11,7 @@ import { GlobalPage } from './pages/GlobalPage';
 interface AppContextProps {
   loginPage: string;
   homePage: string;
-  setModal: (modal: any) => void;
+  setModal: (modal: React.ReactNode | null, width?: number) => void;
 
   account: string;
   setAccount: (value: string) => void;
@@ -33,10 +33,10 @@ interface AppContextProps {
   menus: any[];
   setMenus: React.Dispatch<React.SetStateAction<any[]>>;
 
-  sshKeyUploaded: boolean;
-  setSshKeyUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+  sshKeyUploaded: boolean | null;
+  setSshKeyUploaded: React.Dispatch<React.SetStateAction<boolean | null>>;
 
-  initialized: boolean;
+  appNames: string[];
 }
 
 const AppContext = React.createContext<AppContextProps>(undefined!);
@@ -55,12 +55,17 @@ const AppProvider = ({ children }: AppProviderProps) => {
   const [loginPage] = React.useState('/#/login');
   const [homePage] = React.useState('/#/global');
   const [modal, setModal] = React.useState<any>(null);
+  const [modalWidth, setModalWidth] = React.useState<number>(416);
+  // const [modalWithWidth, setModalWithWidth] = React.useState<any>(null);
 
   const [account, setAccount] = React.useState('');
   const [menus, setMenus] = React.useState<any[]>([globalMenu]);
+  const [appNames, setAppNames] = React.useState<string[]>([]);
   const [globalDomain, setGlobalDomain] = React.useState('');
-  const [sshKeyUploaded, setSshKeyUploaded] = React.useState<boolean>(false);
-  const [initialized, setInitialized] = React.useState<boolean>(false);
+  const [sshKeyUploaded, setSshKeyUploaded] = React.useState<boolean | null>(
+    null,
+  );
+  // const [initialized, setInitialized] = React.useState<boolean>(false);
   /////////////////////////////////////////////////////
 
   React.useEffect(() => {
@@ -84,7 +89,9 @@ const AppProvider = ({ children }: AppProviderProps) => {
       });
       console.log('response', response.data);
 
-      if (response.data.errorCode !== 3) {
+      if (response.data.errorCode === 3) {
+        setSshKeyUploaded(false);
+      } else {
         setSshKeyUploaded(true);
       }
 
@@ -135,20 +142,21 @@ const AppProvider = ({ children }: AppProviderProps) => {
     if (data) {
       window.location.href = homePage;
     }
-    setInitialized(true);
   };
 
   const getApps = async () => {
     const data = await fetch('get', `/api/apps`);
     if (data) {
+      let apps: string[] = [];
       const temp = data.list.map((item: any) => {
+        apps.push(item);
         return {
           key: `/${item}`,
           title: item,
           component: <AppPage appName={item} />,
         };
       });
-
+      setAppNames(apps);
       setMenus([globalMenu, ...temp]);
     }
   };
@@ -160,7 +168,10 @@ const AppProvider = ({ children }: AppProviderProps) => {
       value={{
         loginPage,
         homePage,
-        setModal: (modal: any) => setModal(modal),
+        setModal: (modal: React.ReactNode | null, width: number = 520) => {
+          setModalWidth(width);
+          setModal(modal);
+        },
 
         account,
         setAccount,
@@ -180,7 +191,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
 
         sshKeyUploaded,
         setSshKeyUploaded,
-        initialized,
+        appNames,
       }}
     >
       {modal && (
@@ -190,6 +201,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
           onCancel={() => setModal(null)}
           footer={null}
           closable={false}
+          width={modalWidth}
         >
           {modal}
         </antd.Modal>

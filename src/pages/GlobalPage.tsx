@@ -9,6 +9,7 @@ import { PrimaryButton } from '../components/PrimaryButton';
 import { Notification } from '../components/Notification';
 import { DangerButton } from '../components/DangerButton';
 import { AddApp } from '../modals/AddApp';
+import { DatabasesTalbe } from '../table/DatabasesTalbe';
 
 const GlobalPage = () => {
   const appCtx = React.useContext(AppContext);
@@ -34,13 +35,17 @@ const GlobalPage = () => {
 
   return (
     <>
-      <antd.Tabs defaultActiveKey="upload" tabBarExtraContent={operations}>
+      <antd.Tabs defaultActiveKey="database" tabBarExtraContent={operations}>
         <antd.Tabs.TabPane tab="Global Domain" key="domain">
           <DomainTable />
         </antd.Tabs.TabPane>
 
         <antd.Tabs.TabPane tab="Global Config" key="config">
           <ConfigTable />
+        </antd.Tabs.TabPane>
+
+        <antd.Tabs.TabPane tab="Database" key="database">
+          <DatabasesTalbe />
         </antd.Tabs.TabPane>
       </antd.Tabs>
     </>

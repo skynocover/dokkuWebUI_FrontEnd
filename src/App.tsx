@@ -22,7 +22,7 @@ const App = () => {
     initialize();
   }, []);
 
-  if (!appCtx.initialized) {
+  if (appCtx.sshKeyUploaded === null) {
     return <div></div>;
   }
 

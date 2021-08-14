@@ -25,7 +25,7 @@ const LoginPage = () => {
   const LoginForm = () => {
     return (
       <antd.Form
-        initialValues={{ account: 'admin', password: '1qaz#EDC5tgb' }}
+        // initialValues={{ account: '', password: '' }}
         onFinish={(values) => appCtx.login(values.account, values.password)}
       >
         <antd.Form.Item
@@ -98,8 +98,9 @@ const UploadPage = () => {
       }
       if (info.file.status === 'done') {
         Notification.add('success', 'success upload!');
-        appCtx.setSshKeyUploaded(true);
-        window.location.href = appCtx.loginPage;
+        await appCtx.redirect();
+        // appCtx.setSshKeyUploaded(true);
+        // window.location.href = appCtx.loginPage;
       } else if (info.file.status === 'error') {
         Notification.add('success', 'upload fail!');
       }

@@ -19,16 +19,18 @@ const ConfigTable = ({ appName }: AppPageProp) => {
 
   const initialize = async () => {
     const data = await appCtx.fetch('get', `/api/config/${appName}`);
-    const reports = data.report;
+    if (data) {
+      const reports = data.report;
 
-    const temp: PropsValue[] = [];
-    for (const report of reports) {
-      temp.push({
-        key: report.Key,
-        value: report.Value,
-      });
+      const temp: PropsValue[] = [];
+      for (const report of reports) {
+        temp.push({
+          key: report.Key,
+          value: report.Value,
+        });
+      }
+      setDataSource(temp);
     }
-    setDataSource(temp);
   };
 
   React.useEffect(() => {
@@ -50,9 +52,9 @@ const ConfigTable = ({ appName }: AppPageProp) => {
       title: 'Value',
       align: 'center',
       dataIndex: 'value',
-      width: 800,
+      width: 600,
       render: (item) => (
-        <div style={{ wordWrap: 'break-word', width: 800 }}>{item}</div>
+        <div style={{ wordWrap: 'break-word', width: 600 }}>{item}</div>
       ),
     },
     {
