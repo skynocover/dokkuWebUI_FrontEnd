@@ -23,19 +23,14 @@ const GlobalPage = () => {
   }, []);
 
   const operations = (
-    <antd.Button
-      type="primary"
-      onClick={() => {
-        appCtx.setModal(<AddApp />);
-      }}
-    >
+    <antd.Button type="primary" onClick={() => appCtx.setModal(<AddApp />)}>
       Add new App
     </antd.Button>
   );
 
   return (
     <>
-      <antd.Tabs defaultActiveKey="database" tabBarExtraContent={operations}>
+      <antd.Tabs defaultActiveKey="domain" tabBarExtraContent={operations}>
         <antd.Tabs.TabPane tab="Global Domain" key="domain">
           <DomainTable />
         </antd.Tabs.TabPane>
@@ -61,13 +56,12 @@ const ConfigTable = () => {
     const data = await appCtx.fetch('get', `/api/globalconfig`);
     if (data) {
       const reports = data.report;
-      const temp: PropsValue[] = [];
-      for (const report of reports) {
-        temp.push({
+      const temp = reports.map((report: any) => {
+        return {
           key: report.Key,
           value: report.Value,
-        });
-      }
+        };
+      });
       setDataSource(temp);
     }
   };
@@ -104,9 +98,7 @@ const ConfigTable = () => {
               'delete',
               `/api/globalconfig/${item.key}?restart=${restart}`,
             );
-            if (data) {
-              initialize();
-            }
+            if (data) initialize();
           }}
         />
       ),
@@ -204,16 +196,13 @@ const DomainTable = () => {
         if (report.Key === 'Domains global vhosts') {
           const vhosts = report.Value.split(' ');
           for (const host of vhosts) {
-            if (host !== '') {
-              hosts.push({ host });
-            }
+            if (host !== '') hosts.push({ host });
           }
         }
       }
 
-      if (hosts.length > 0) {
-        appCtx.setGlobalDomain(hosts[0].host);
-      }
+      if (hosts.length > 0) appCtx.setGlobalDomain(hosts[0].host);
+
       setDataSource(hosts);
     }
   };
@@ -245,9 +234,7 @@ const DomainTable = () => {
               `/api/globaldomain/${item.host}`,
               [item.host],
             );
-            if (data) {
-              initialize();
-            }
+            if (data) initialize();
           }}
         />
       ),

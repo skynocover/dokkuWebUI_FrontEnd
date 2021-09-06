@@ -105,7 +105,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
       }
 
       data = response.data;
-    } catch (error) {
+    } catch (error: any) {
       Notification.add('error', error.message);
     }
 

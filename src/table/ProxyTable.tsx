@@ -85,9 +85,7 @@ const ProxyTable = ({ appName }: AppPageProp) => {
               hostPort: item.hostPort,
               containerPort: item.containerPort,
             });
-            if (data) {
-              initialize();
-            }
+            if (data) initialize();
           }}
         />
       ),

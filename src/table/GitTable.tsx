@@ -18,13 +18,12 @@ const GitTable = ({ appName }: AppPageProp) => {
     const data = await appCtx.fetch('get', `/api/git/${appName}`);
     const reports = data.report;
 
-    const temp: PropsValue[] = [];
-    for (const report of reports) {
-      temp.push({
+    const temp = reports.map((report: any) => {
+      return {
         key: report.Key,
         value: report.Value,
-      });
-    }
+      };
+    });
     setDataSource(temp);
   };
 

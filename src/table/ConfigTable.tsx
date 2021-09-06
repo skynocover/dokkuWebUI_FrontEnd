@@ -22,13 +22,12 @@ const ConfigTable = ({ appName }: AppPageProp) => {
     if (data) {
       const reports = data.report;
 
-      const temp: PropsValue[] = [];
-      for (const report of reports) {
-        temp.push({
+      const temp = reports.map((report: any) => {
+        return {
           key: report.Key,
           value: report.Value,
-        });
-      }
+        };
+      });
       setDataSource(temp);
     }
   };
@@ -69,9 +68,7 @@ const ConfigTable = ({ appName }: AppPageProp) => {
               'delete',
               `/api/config/${appName}/${item.key}?restart=${restart}`,
             );
-            if (data) {
-              initialize();
-            }
+            if (data) initialize();
           }}
         />
       ),

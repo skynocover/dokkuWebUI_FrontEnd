@@ -62,9 +62,7 @@ const DomainTable = ({ appName }: AppPageProp) => {
             let data = await appCtx.fetch('delete', `/api/domain/${appName}`, [
               item.host,
             ]);
-            if (data) {
-              initialize();
-            }
+            if (data) initialize();
           }}
         />
       ),

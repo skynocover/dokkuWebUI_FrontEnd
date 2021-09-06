@@ -23,9 +23,7 @@ const Log = ({ appName }: AppPageProp) => {
   const initialize = async () => {
     const data = await appCtx.fetch('get', `/api/logs/${appName}/${num}`);
 
-    if (data) {
-      setDataSource(data.report.split('\n'));
-    }
+    if (data) setDataSource(data.report.split('\n'));
   };
 
   React.useEffect(() => {

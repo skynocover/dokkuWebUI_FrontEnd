@@ -32,7 +32,6 @@ export const DatabasesTalbe = () => {
     setSpinning({ spinning: true });
     const data = await appCtx.fetch('get', '/api/databases');
     if (data) {
-      console.log(data);
       setDataSource(data.databases);
     }
     setSpinning({ spinning: false });
